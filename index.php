@@ -1,5 +1,6 @@
 <?php include("includes/head.php"); ?>
 <?php include("includes/headd.php"); ?>
+<?php include("includes/test.php"); ?>
 
        <div class="l-form">
             <div class="shape1"></div>
