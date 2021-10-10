@@ -1,3 +1,11 @@
+<?php
+
+    include './func/cre.php';
+    $model = new Model;
+    $createBlog = $model->createBlog();
+
+?>
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -27,7 +35,6 @@
                     <a href="" class="active"><span><i class="fab fa-blogger-b"></i></span>
                     <span>Blogs</span></a>
                 </li>
-              
                 <li>
                     <a href="" class="active"><span><i class="fas fa-briefcase"></i></span>
                     <span>Jobs</span></a>
@@ -41,7 +48,7 @@
                     <span>Home</span></a>
                 </li>
                 <li>
-                    <a href="" class="active"><span><i class="fas fa-sign-out-alt"></i></span>
+                    <a href="./logout.php" class="active"><span><i class="fas fa-sign-out-alt"></i></span>
                     <span>Logout</span></a>
                 </li>
             </ul>
@@ -49,7 +56,7 @@
         </div>
     <!-- Sidebar -->
 
-    <div class="main-content">
+    <div class="main-content ">
         <!-- Header -->
         <header>
             <h2>
@@ -71,28 +78,48 @@
                 <div class="projects">
                     <div class="card">
                         <div class="card-header">
-                            <h5>Edit Blog</h5>
-                            <a href="#">
-                                <button>Add New Blog</button>
+                            <h5>Add Blog</h5>
+                            <a href="/html/admin_dashboard_blog.html">
+                                <button>Manage Blogs</button>
                             </a>
                         </div>
                         <div class="card-body">
-                            <div class="table-responsive">
-                                <form action="#" method="post">
+                             <div class="table-responsive">
+                                 <!-- Neu khong phai admin thi out -->
+                                 <?php if (isset($_SESSION['role']) && $_SESSION['role'] == 1): ?>
+
+                                <form action="" method="POST" enctype="multipart/form-data">
+
+                                    <!-- Input TITLE -->
                                     <div>
                                         <label for="title">Title</label><br>
                                         <input type="text" name="title" id="" class="text-input"><br>
                                     </div>
+
+                                    <!-- Input AUTHOR -->
+                                    <div>
+                                        <label for="author">Author</label><br>
+                                        <input type="text" name="author" id="" class="text-input"><br>
+                                    </div>
+
+                                    <!-- Input BODY -->
                                     <div>
                                         <label for="body">Body</label>
                                         <textarea name="body" id="body" class="text-input"></textarea>
                                     </div>
+
+                                    <!-- Input IMAGE -->
                                     <div>
                                         <label for="Image">Image</label><br>
                                         <input type="file" name="image" class="text-input" >
                                     </div>
-                                    <button type="submit"> Add Blog</button>
+                                    
+                                    <button type="submit" name="submit"> Add Blog</button>
                                 </form>
+
+                                <?php else : echo "<h1> You're in a wrong place my friend";?>
+                                <?php endif ?>
+
                             </div>
                         </div>
 
@@ -120,22 +147,16 @@
                     </div>
                 </div>
         </main>
-         <footer>
+        <footer>
             <p class="text-center pt-2">© 2021 WORKr. All rights reserved.</p>
         </footer>
     </div>
-
-
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    <!-- include summernote css/js -->
-    <!-- <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script> -->
     <script src="https://cdn.ckeditor.com/ckeditor5/12.2.0/classic/ckeditor.js"></script>
     <script src="/js/blog_dashboard.js"></script>
-
   </body>
 </html>

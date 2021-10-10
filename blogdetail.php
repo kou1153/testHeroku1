@@ -1,3 +1,17 @@
+<?php
+    include './func/cre.php';
+    include './func/render.php';
+
+    $model = new Model;
+    
+    if (isset($_GET['id'])) {
+
+        $blogID = $_GET['id'];
+        $blog = $model->getBlogDetail($blogID);
+
+    }
+?>
+
 <!doctype html>
 <html lang="en">
 
@@ -58,85 +72,76 @@
     </nav>
     <!-- !Navbar -->
 
-    <!-- Cards -->
-    <div class="container-fluid mt-5 ">
-        <h3>Advice and inspiration for building successful careers.</h3>
-        <p class="">Resume guides. Interviewing tips. Industry data.</p>
-        <div class="row topic-post">
-            <div class="col-lg-4 col-md-6 pt-4">
-                <div class="card border rounded-2 shadow advice" style="width: 25rem;">
-                    <img src="/images/carrer.svg" class="card-img-top" alt="    ">
-                    <div class="card-body">
-                        <h5 class="card-title">What you need to know about getting a side hustle</h5>
-                        <p class="card-text">WORKr | <small>September 25,2021</small></p>
-                        <p>Lorem ipsum dolor sit amet.</p>
-                        <small class="float-right"><i class="fa fa-arrow-right" aria-hidden="true"></i> Read
-                            More</small>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 pt-4">
-                <div class="card border rounded-2 shadow advice" style="width: 25rem;">
-                    <img src="/images/carrer.svg" class="card-img-top" alt="    ">
-                    <div class="card-body">
-                        <h5 class="card-title">What you need to know about getting a side hustle</h5>
-                        <p class="card-text">WORKr | <small>September 25,2021</small></p>
-                        <p>Lorem ipsum dolor sit amet.</p>
-                        <small class="float-right"><i class="fa fa-arrow-right" aria-hidden="true"></i> Read
-                            More</small>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 pt-4">
-                <div class="card border rounded-2 shadow advice" style="width: 25rem;">
-                    <img src="/images/carrer.svg" class="card-img-top" alt="    ">
-                    <div class="card-body">
-                        <h5 class="card-title">What you need to know about getting a side hustle</h5>
-                        <p class="card-text">WORKr | <small>September 25,2021</small></p>
-                        <p>Lorem ipsum dolor sit amet.</p>
-                        <small class="float-right"><i class="fa fa-arrow-right" aria-hidden="true"></i> Read
-                            More</small>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 pt-4">
-                <div class="card border rounded-2 shadow advice" style="width: 25rem;">
-                    <img src="/images/carrer.svg" class="card-img-top" alt="    ">
-                    <div class="card-body">
-                        <h5 class="card-title">What you need to know about getting a side hustle</h5>
-                        <p class="card-text">WORKr | <small>September 25,2021</small></p>
-                        <p>Lorem ipsum dolor sit amet.</p>
-                        <small class="float-right"><i class="fa fa-arrow-right" aria-hidden="true"></i> Read
-                            More</small>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <!-- Content -->
 
-    </div>
-    <!-- !Cards -->
+    <?php if(isset($_GET['id']) && $blog != false): ?>
 
-    <!-- Pagination -->
+        <?php renderBlogDetail($blog); ?>
 
-    <div class="container mt-3 d-flex justify-content-center">
+    <?php else: ?>
+
+    <h1>Blog not found</h1>
+
+    <?php endif ?>
+    <!-- !Content -->
+
+    <!-- See more blog -->
+    <div class="container mt-5">
+        <h3 class="text-center">More from blog...</h3>
         <div class="row">
-            <ul class="d-flex page-nav">
-                <li><a class="prev" href=""><i class="fas fa-chevron-left"></i></a></li>
-                <li class="pageNumber active"><a href="">1</a></li>
-                <li class="pageNumber"><a href="">2</a></li>
-                <li class="pageNumber"><a href="">3</a></li>
-                <li class="pageNumber"><a href="">4</a></li>
-                <li class="pageNumber"><a href="">5</a></li>
-                <li class="pageNumber"><a href="">6</a></li>
-                <li><a class="next" href=""><i class="fas fa-chevron-right"></i></a></li>
-            </ul>
+
+        <!-- Neu lay duoc ID va sql query khong loi -->
+            <?php if(isset($_GET['id']) && $blog != false): 
+                
+                $exists = array(); 
+                
+            ?>
+
+        <!-- Loop 3 lan = 3 bai  -->
+            <?php for ($i = 1; $i <= 3; $i++) :  
+
+                do{
+
+                    $randomBlogID = $model->getRandBlogID($blogID);
+
+                } while(
+
+                    in_array($randomBlogID, $exists)
+
+                );
+
+                array_push($exists, $randomBlogID);
+
+                $blog = $model->getBlogDetail((int)$randomBlogID); 
+
+                // Neu du 3 bai thi set => khong de thi co nhieu in bay nhieu
+                // Cac bai bi xoa lot vao 3 so random thi co bao nhieu in bay nhieu
+
+                $smallText = substr($blog['content'], 0, 50);
+
+
+            ?>
+
+            <?php
+
+               renderMoreBlog($blog, $smallText);
+
+            ?>
+
+            <?php endfor; ?>
+
+            <?php else: ?>
+
+            <h1>Blog not found</h1>
+
+            <?php endif ?>
+
         </div>
     </div>
-    <!-- !Pagination -->
+    <!-- !See more blog -->
 
-     <!-- Footer -->
-    <footer class="bg-light">
-        <div class="container">
+    <footer class="bg-light mt-5">
+        <div class="container ">
             <div class="boxx">
                 <div class="weird mt-4">
                     <img src="../images/LOGO.png" alt="">
@@ -188,17 +193,18 @@
         <br>
         <h6 class="text-center" style="color: #2D7BA0;">© 2021 WORKs. All rights reserved</h6>
     </footer>
+
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        crossorigin="anonymous"></script>
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
+    </script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-        crossorigin="anonymous"></script>
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+    </script>
 </body>
 
 </html>
