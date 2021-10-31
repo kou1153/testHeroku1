@@ -1,16 +1,31 @@
 <?php 
 
-include './func/cre.php';
-include './func/render.php';
+    include './func/cre.php';
+    include './func/render.php';
 
-$model = new Model;
+    $model = new Model;
 
-if (isset($_GET['id'])) {
+    if(isset($_SESSION['role']) && $_SESSION['role'] == 1){
 
-    $blogID = $_GET['id'];
-    $blog = $model->getBlogDetail($blogID);
+        $role = $_SESSION['role'];        
+        $userid = $_SESSION['userid'];
+        $employer = new stdClass();
+        
+        $jobseeker = $model->getJobSeeker($userid);
+        // End header
+        if (isset($_GET['id'])) {
 
-}
+            $blogID = $_GET['id'];
+            $blog = $model->getBlogDetail($blogID);
+            
+        }
+        
+
+    }else{
+
+        echo "<script>window.location.href = 'index.php';</script>";
+
+    }
 
 ?>
 
@@ -18,19 +33,8 @@ if (isset($_GET['id'])) {
 <html lang="en">
 
 <head>
-    <title>Title</title>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css"
-        integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <?php include ('./includes/head.php');?>
     <link rel="stylesheet" href="/css/dashboard.css">
-    <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
@@ -44,20 +48,19 @@ if (isset($_GET['id'])) {
         <div class="sidebar-menu">
             <ul>
                 <li>
-                    <a href="" class="active"><span><i class="fab fa-blogger-b"></i></span>
+                    <a href="./admin_dashboard_add.php" class="active"><span><i class="fab fa-blogger-b"></i></span>
                         <span>Blogs</span></a>
                 </li>
-
                 <li>
-                    <a href="" class="active"><span><i class="fas fa-briefcase"></i></span>
+                    <a href="./admin_dashboard_blog.php" class="active"><span><i class="fas fa-briefcase"></i></span>
                         <span>Jobs</span></a>
                 </li>
                 <li>
-                    <a href="" class="active"><span><i class="fas fa-pen"></i></span>
+                    <a href="./admin_dashboard.reviews.php" class="active"><span><i class="fas fa-pen"></i></span>
                         <span>Review</span></a>
                 </li>
                 <li>
-                    <a href="" class="active"><span><i class="fa fa-home" aria-hidden="true"></i></span>
+                    <a href="./index.php" class="active"><span><i class="fa fa-home" aria-hidden="true"></i></span>
                         <span>Home</span></a>
                 </li>
                 <li>
@@ -71,19 +74,9 @@ if (isset($_GET['id'])) {
 
     <div class="main-content">
         <!-- Header -->
-        <header>
-            <h2>
-                <label for="nav-toggle">
-                    <span><i class="fas fa-bars text-white"></i></span>
-                </label>
-            </h2>
-            <div class="user-wrapper">
-                <img src="/images/Avatar.png" width="40px" height="40px" alt="">
-                <div>
-                    <h6 class="text-white">Administrador</h6>
-                </div>
-            </div>
-        </header>
+
+        <?php renderHeader($role, $jobseeker, $employer); ?>
+
         <!-- Header -->
 
         <main>
@@ -99,21 +92,17 @@ if (isset($_GET['id'])) {
                         <div class="card-body">
                             <div class="table-responsive">
 
-                                <!-- Neu khong phai admin thi out -->
-                                <?php if (isset($_SESSION['role']) && $_SESSION['role'] == 1): ?>
-
                                 <?php 
-                                
-                                    renderEditBlogAdmin($blog);     
+
+                                    if (isset($_GET['id'])) {
+                                        renderEditBlogAdmin($blog);
                                     
-                                    if(isset($_POST['update'])){
-
-                                    $model->updateBlog($blogID);
-
-                                    } ?>
-
-                                <?php else : echo "<h1> You're in a wrong place my friend";?>
-                                <?php endif ?>
+                                        if (isset($_POST['update'])) {
+                                            $model->updateBlog($blogID);
+                                        }
+                                    }else{ echo "You have to choose a blog to edit"; }
+                                    
+                                ?>
 
                             </div>
                         </div>
